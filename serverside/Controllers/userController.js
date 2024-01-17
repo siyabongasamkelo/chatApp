@@ -16,7 +16,7 @@ const registerUser = async (req, res) => {
 
     if (user) return res.status(400).json("User already exists");
 
-    if (!user || !email || !password)
+    if (!name || !email || !password)
       return res.status(400).json("All fields are required");
 
     if (!validator.isEmail(email)) return res.status(400).json("Invalid email");
@@ -35,8 +35,8 @@ const registerUser = async (req, res) => {
 
     res.status(200).json({ _id: user._id, name, email, token });
   } catch (error) {
-    console.log(error);
-    res.staus(400).json({ error });
+    console.log(error.message);
+    res.status(400).json({ error });
   }
 };
 
