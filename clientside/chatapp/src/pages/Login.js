@@ -1,11 +1,16 @@
 import { Alert, Button, Form, Row, Col, Stack } from "react-bootstrap";
 import NavBar from "../components/Navbar";
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 
 const Login = () => {
+  const { loginUser, loginError, loginInfo, updateLoginInfo, isLoginLoading } =
+    useContext(AuthContext);
+
   return (
     <>
       <NavBar />
-      <Form>
+      <Form onSubmit={loginUser}>
         <Row
           style={{
             height: "100vh",
@@ -16,15 +21,29 @@ const Login = () => {
           <Col xs={6}>
             <Stack gap={6}>
               <h2 className=" text-white">Login</h2>
-              <Form.Control type="email" placeholder="Email" />
-              <Form.Control type="Password" placeholder="Password" />
+              <Form.Control
+                type="email"
+                placeholder="Email"
+                onChange={(e) =>
+                  updateLoginInfo({ ...loginInfo, email: e.target.value })
+                }
+              />
+              <Form.Control
+                type="Password"
+                placeholder="Password"
+                onChange={(e) =>
+                  updateLoginInfo({ ...loginInfo, password: e.target.value })
+                }
+              />
               <Button variant="primary" type="submit">
                 Register
               </Button>
 
-              <Alert variant="danger">
-                <p>An error occured</p>
-              </Alert>
+              {loginError?.error && (
+                <Alert variant="danger">
+                  <p>{loginError?.message}</p>
+                </Alert>
+              )}
             </Stack>
           </Col>
         </Row>
