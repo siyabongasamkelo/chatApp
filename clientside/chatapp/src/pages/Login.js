@@ -36,7 +36,7 @@ const Login = () => {
                 }
               />
               <Button variant="primary" type="submit">
-                Register
+                {isLoginLoading ? "Getting you in..." : "Login"}
               </Button>
 
               {loginError?.error && (
