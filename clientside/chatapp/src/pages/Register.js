@@ -2,7 +2,6 @@ import { Alert, Button, Form, Row, Col, Stack } from "react-bootstrap";
 import NavBar from "../components/Navbar";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
-import { baseUrl, postRequest } from "../utils/Services";
 
 const Register = () => {
   const {
