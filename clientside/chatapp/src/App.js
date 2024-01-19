@@ -11,6 +11,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Container } from "react-bootstrap";
 import { useContext } from "react";
 import { AuthContext } from "./context/AuthContext";
+import { ChatContextProvider } from "./context/ChatContext";
 
 function App() {
   const { user } = useContext(AuthContext);
@@ -27,9 +28,11 @@ function App() {
   );
   return (
     <>
-      <Container>
-        <RouterProvider router={router} />
-      </Container>
+      <ChatContextProvider user={user}>
+        <Container>
+          <RouterProvider router={router} />
+        </Container>
+      </ChatContextProvider>
     </>
   );
 }
