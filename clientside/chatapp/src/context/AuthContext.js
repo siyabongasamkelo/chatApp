@@ -35,8 +35,6 @@ export const AuthContextProvider = ({ children }) => {
     setUser(JSON.parse(user));
   }, []);
 
-  console.log("loginInfo", loginInfo);
-
   const loginUser = useCallback(
     async (e) => {
       e.preventDefault();
