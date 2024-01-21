@@ -17,8 +17,10 @@ export const ChatContextProvider = ({ children, user }) => {
   const [newMessage, setNewMessage] = useState(null);
   const [socket, setSocket] = useState(null);
   const [onlineUsers, setOnlineUsers] = useState([]);
+  const [notifications, setNotifications] = useState([]);
+  const [allUsers, setAllUsers] = useState([]);
 
-  console.log("onlineUser", onlineUsers);
+  console.log("notifications", notifications);
 
   //socket init
 
@@ -48,7 +50,7 @@ export const ChatContextProvider = ({ children, user }) => {
     socket.emit("sendMessage", { ...newMessage, recipientId });
   }, [newMessage]);
 
-  //recieve message
+  //recieve message & notification
   useEffect(() => {
     if (socket === null) return;
 
@@ -58,8 +60,21 @@ export const ChatContextProvider = ({ children, user }) => {
       setMessages((prev) => [...prev, res]);
     });
 
+    socket.on("getNotification", (res) => {
+      const isChatOpen = currentChats?.members.some(
+        (id) => id === res.senderId
+      );
+
+      if (isChatOpen) {
+        setNotifications((prev) => [{ ...res, isRead: true }, ...prev]);
+      } else {
+        setNotifications((prev) => [res, ...prev]);
+      }
+    });
+
     return () => {
       socket.off("getMessage");
+      socket.off("getNotification");
     };
   }, [socket, currentChats]);
 
@@ -85,6 +100,7 @@ export const ChatContextProvider = ({ children, user }) => {
       });
 
       setPotentialChats(pChats);
+      setAllUsers(response);
     };
     getUsers();
     //before there was a userChats on the dependencies then i removed it bcz it was causing too man re renders...
@@ -170,6 +186,16 @@ export const ChatContextProvider = ({ children, user }) => {
     setUserChats((prev) => [...prev, response]);
   }, []);
 
+  const markAllNotificationAsRead = useCallback(() => {
+    const mNotifications = notifications.map((n) => {
+      return {
+        ...n,
+        isRead: true,
+      };
+    });
+    setNotifications(mNotifications);
+  }, []);
+
   return (
     <ChatContext.Provider
       value={{
@@ -185,6 +211,9 @@ export const ChatContextProvider = ({ children, user }) => {
         messageError,
         sendTextMessage,
         onlineUsers,
+        notifications,
+        allUsers,
+        markAllNotificationAsRead,
       }}
     >
       {children}
