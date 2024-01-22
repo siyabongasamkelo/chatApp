@@ -1,0 +1,3 @@
+this project is for helping me understand socketIo better 
+& i think it's important that i mention that im copying/learning this from
+a turtorial so this is fully my project...
